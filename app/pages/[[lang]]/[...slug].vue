@@ -7,7 +7,7 @@ const route = useRoute()
 const { locale, t } = useDocusI18n()
 const appConfig = useAppConfig()
 const navigation = inject<Ref<ContentNavigationItem[]>>('navigation')
-const { shouldPushContent: shouldHideToc } = useAssistant()
+const { isEnabled: isAssistantEnabled, shouldPushContent: shouldHideToc } = useAssistant()
 
 type DocsCollectionName = Extract<keyof Collections, `docs_${string}`>
 type DocsPage = Collections[DocsCollectionName]
@@ -50,6 +50,12 @@ const breadcrumbs = computed(() => findPageBreadcrumbs(navigation?.value, page.v
 const pageLinks = computed(() => page.value?.links ?? [])
 const surroundLinks = computed(() => surround.value ?? [])
 const tocLinks = computed(() => page.value?.body?.toc?.links ?? [])
+const showExplainWithAi = computed(() => {
+  return isAssistantEnabled.value && appConfig.assistant?.explainWithAi !== false
+})
+const hasRightAsideContent = computed(() => {
+  return Boolean(tocLinks.value.length || appConfig.toc?.bottom?.links?.length || showExplainWithAi.value)
+})
 const isLocalizedHomePage = computed(() => {
   const localizedRoots = Object.keys(docsCollections).map(localeCode => `/${localeCode}`)
 
@@ -165,7 +171,7 @@ addPrerenderPath(`/raw${route.path}.md`)
     </UPageBody>
 
     <template
-      v-if="tocLinks.length && !shouldHideToc"
+      v-if="hasRightAsideContent && !shouldHideToc"
       #right
     >
       <UContentToc

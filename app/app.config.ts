@@ -7,6 +7,9 @@ export default defineAppConfig({
       github: "vinuni/carbon-docus",
     },
   },
+  sitemap: {
+    enabled: true,
+  },
   ui: {
     colors: {
       primary: "green",
