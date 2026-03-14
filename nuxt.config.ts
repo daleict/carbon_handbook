@@ -94,13 +94,13 @@ export default defineNuxtConfig({
   },
   studio: {
     repository: {
-          provider: 'github', // 'github' or 'gitlab'
-          owner: 'khanhthanhdev',
-          repo: 'https://github.com/khanhthanhdev/carbon_handbook',
-          branch: 'main'
+      provider: 'github',
+      owner: 'khanhthanhdev',
+      repo: 'carbon_handbook',
+      branch: 'main',
     },
-    dev: true,
-    },
+
+  },
   mcp: {
     enabled: true,
   },
