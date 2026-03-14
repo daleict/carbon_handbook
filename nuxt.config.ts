@@ -91,6 +91,10 @@ export default defineNuxtConfig({
       code: 'vi',
       name: 'Tiếng Việt',
     }],
+    skipSettingLocaleOnNavigate: true,
+  },
+  routeRules: {
+    '/_studio/**': { isr: false },
   },
   studio: {
     repository: {
