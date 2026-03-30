@@ -5,7 +5,9 @@ import { transformNavigation } from './utils/navigation'
 
 const { seo } = useAppConfig()
 const site = useSiteConfig()
+const route = useRoute()
 const { locale, locales, isEnabled, switchLocalePath } = useDocusI18n()
+const { finalizePendingLocaleChange } = useI18n()
 const { isEnabled: isAssistantEnabled, panelWidth: assistantPanelWidth, shouldPushContent } = useAssistant()
 
 const nuxtUiLocale = computed(() => nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales] || nuxtUiLocales.en)
@@ -35,8 +37,13 @@ useSeoMeta({
 })
 
 if (isEnabled.value) {
-  const route = useRoute()
   const defaultLocale = useRuntimeConfig().public.i18n.defaultLocale!
+
+  // Keep app-level state in sync with the localized route when locale updates are deferred.
+  watch(() => route.path, () => {
+    void finalizePendingLocaleChange()
+  }, { immediate: true })
+
   onMounted(() => {
     const currentLocale = route.path.split('/')[1]
     if (!locales.some(locale => locale.code === currentLocale)) {
